@@ -1,0 +1,23 @@
+---
+
+- name: Determine if Handle needs to be downloaded/unarchived
+  stat: path=/usr/local/hsj-{{ handle_version }}
+  register: handle_path
+
+- name: Download Handle into /usr/local directory
+  get_url: url=http://www.handle.net/hnr-source/hsj-{{ handle_version }}.tar.gz dest=/usr/local/hsj-{{ handle_version }}.tar.gz
+  when: handle_path.stat.exists == False
+
+- name: Unpack Handle Download
+  unarchive: src=/usr/local/hsj-{{ handle_version }}.tar.gz dest=/usr/local copy=no
+  when: handle_path.stat.exists == False
+
+- name: Create symbolic link for the handle directory
+  file: src=/usr/local/hsj-{{ handle_version }}  dest=/usr/local/handle state=link
+
+- name: Ensure correct file/directory ownership for handle
+  file: path=/usr/local/hsj-{{ handle_version }} owner=dspace group=dspace recurse=yes state=directory
+
+- name: Put in place the handle init script
+  copy: src=handle_init dest=/etc/init.d/handle mode=0755
+

@@ -1,0 +1,6 @@
+---
+# Define the version of CNRI Handle to download
+# Will obtain from this URL:
+# http://www.handle.net/hnr-source/hsj-{{ handle_version }}.tar.gz
+handle_version: 8.1.1
+

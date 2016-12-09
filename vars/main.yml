@@ -1,0 +1,4 @@
+---
+# Define the version of CNRI Handle to download
+# Will obtain from this URL:
+handle_version: 8.1.1
