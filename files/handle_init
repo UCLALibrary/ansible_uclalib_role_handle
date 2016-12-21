@@ -82,7 +82,7 @@ start() {
         echo "Starting handle instance $PROG..."
         echo " ... waiting for Tomcat ... "
         wait-for-tomcat
-        ${SU} -m ${TOMCAT_USER} -c "nohup /usr/local/handle/ucladr/start-hdl-server /usr/local/handle/ucladr > /dev/null &"
+        ${SU} -m ${TOMCAT_USER} -c "nohup /usr/local/handle/config/start-hdl-server /usr/local/handle/config > /dev/null &"
         echo "Done."
 }
 
