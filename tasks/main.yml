@@ -4,13 +4,12 @@
   stat: path=/usr/local/hsj-{{ handle_version }}
   register: handle_path
 
-  # TODO: add a checksum to this get_url, don't just trust this download
 - name: Download Handle into /usr/local directory
-  get_url: url=http://www.handle.net/hnr-source/hsj-{{ handle_version }}.tar.gz dest=/usr/local/hsj-{{ handle_version }}.tar.gz checksum=md59c0be4a9c41f7a125a5f0cd6dfa1ae96
+  get_url: url=http://www.handle.net/hnr-source/hsj-{{ handle_version }}.tar.gz dest=/usr/local/hsj-{{ handle_version }}.tar.gz checksum=md5:e5ce0d4c869f21fdc16eb4df33e1ab14
   when: handle_path.stat.exists == False
 
 - name: Unpack Handle Download
-  unarchive: src=/usr/local/hsj-{{ handle_version }}.tar.gz dest=/usr/local copy=no
+  unarchive: src=/usr/local/hsj-{{ handle_version }}.tar.gz dest=/usr/local copy=no owner=dspace group=dspace mode=0775
   when: handle_path.stat.exists == False
 
 - name: Create symbolic link for the handle directory
@@ -23,11 +22,11 @@
   copy: src=handle_init dest=/etc/init.d/handle mode=0755
 
 - name: Grab the DSpace Remote Handle Resolver plugin
-  get_url: url=https://github.com/DSpace/Remote-Handle-Resolver/releases/download/dspace-remote-handle-resolver-1.0/dspace-remote-handle-resolver-1.0.jar dest={{ handle_path }}/lib/dspace-remote-handle-resolver-1.0.jar checksum=md5c2a604c29ca4eca5e53e8ca97e896424
+  get_url: url=https://github.com/DSpace/Remote-Handle-Resolver/releases/download/dspace-remote-handle-resolver-1.0/dspace-remote-handle-resolver-1.0.jar dest=/usr/local/handle/lib/dspace-remote-handle-resolver-1.0.jar checksum=md5:c2a604c29ca4eca5e53e8ca97e896424 owner=dspace group=dspace mode=0660
 
 # create the config folder and park the Handle plugin config in there
 - name: Create the handle config folder
-  file: path={ handle_path }/config state=directory
+  file: path="/usr/local/handle/config" state=directory owner=dspace group=dspace mode=2755
 
 - name: copy the DSpace remote handle resolver plugin config
-  template: src=handle-dspace-plugin.j2 dest={ handle_path }/config/handle-dspace-plugin.cfg 
+  template: src=handle-dspace-plugin.j2 dest="/usr/local/handle/config/handle-dspace-plugin.cfg" owner=dspace group=dspace mode=0660
