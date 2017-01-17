@@ -4,3 +4,4 @@
 # http://www.handle.net/hnr-source/hsj-{{ handle_version }}.tar.gz
 handle_version: 8.1.1
 
+dspace_localUrl: http://localhost:8081
