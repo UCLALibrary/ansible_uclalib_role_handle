@@ -1,1 +1,3 @@
-dspace.handle.endpoint1={{ dspace_localUrl }}/{{ dspace_ui }}/json/hdlresolver
+{% for endpoint in endpoints %}
+dspace.handle.endpoint{{loop.index}}={{endpoint}}
+{% endfor %}

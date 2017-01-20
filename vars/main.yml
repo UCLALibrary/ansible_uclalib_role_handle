@@ -1,4 +1,5 @@
 ---
-# Define the version of CNRI Handle to download
-# Will obtain from this URL:
-handle_version: 8.1.1
+# assembled vars based on defaults
+
+handle_config_path: "{{$handle_path}}/config"
+
