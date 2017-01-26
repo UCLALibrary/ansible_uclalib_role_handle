@@ -4,3 +4,9 @@
 # http://www.handle.net/hnr-source/hsj-{{ handle_version }}.tar.gz
 handle_version: 8.1.1
 
+dspace_localUrl: http://localhost:8081
+
+# handle endpoints, we expect this to be overwritten by the playbook, this is only here for documentation purposes
+# ... this list can accomodate as many endpoints as you need 
+endpoints:
+    - "{{ dspace_localUrl }}/{{ dspace_ui }}/json/hdlresolver"
