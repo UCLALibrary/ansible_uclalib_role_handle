@@ -6,9 +6,7 @@ handle_version: 8.1.1
 
 dspace_localUrl: http://localhost:8081
 
-handle_path: /usr/local/handle
-
 # handle endpoints, we expect this to be overwritten by the playbook, this is only here for documentation purposes
 # ... this list can accomodate as many endpoints as you need 
 endpoints:
-    - {{ dspace_localUrl }}/{{ dspace_ui }}/json/hdlresolver
+    - "{{ dspace_localUrl }}/{{ dspace_ui }}/json/hdlresolver"

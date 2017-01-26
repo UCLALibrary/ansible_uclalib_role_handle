@@ -13,7 +13,7 @@
   when: handle_actual_path.stat.exists == False
 
 - name: Create symbolic link for the handle directory
-  file: src=/usr/local/hsj-{{ handle_version }}  dest={{ handle_path }} state=link
+  file: src=/usr/local/hsj-{{ handle_version }}  dest=/usr/local/handle state=link
 
 - name: Ensure correct file/directory ownership for handle
   file: path=/usr/local/hsj-{{ handle_version }} owner=dspace group=dspace recurse=yes state=directory
@@ -26,28 +26,28 @@
 
 # create the config folder and park the Handle plugin config in there
 - name: Create the handle config folder
-  file: path={{ handle_config_path }} state=directory owner=dspace group=dspace mode=2755
+  file: path=/usr/local/handle/config state=directory owner=dspace group=dspace mode=2755
 
 - name: copy the DSpace remote handle resolver plugin config
-  template: src=handle-dspace-plugin.j2 dest="{{ handle_config_path }}/handle-dspace-plugin.cfg" owner=dspace group=dspace mode=0660
+  template: src=handle-dspace-plugin.j2 dest=/usr/local/handle/config/handle-dspace-plugin.cfg owner=dspace group=dspace mode=0660
 
 - name: copy the log4j-handle-plugin.properties config
-  template: src=log4j-handle-plugin.j2 dest="{{ handle_config_path }}/log4j-handle-plugin.properties" owner=dspace group=dspace mode=0660
+  template: src=log4j-handle-plugin.j2 dest=/usr/local/handle/config/log4j-handle-plugin.properties owner=dspace group=dspace mode=0660
 
 - name: copy the start-hdl-server script from the distribution to the config folder
-  copy: remote_src=true src={{ handle_path }}/bin/hdl-server dest={{ handle_config_path }}/start-hdl-server
+  copy: remote_src=true src=/usr/local/handle/bin/hdl-server dest=/usr/local/handle/config/start-hdl-server
 
 - name: set HDLHOME in the start-hdl-server script
   lineinfile:
-      path: {{ handle_config_path }}/start-hdl-server
-      insertafter: '^HDLHOME='
-      line: 'HDLHOME="{{ handle_path }}"'
+    dest: /usr/local/handle/config/start-hdl-server
+    insertafter: '^HDLHOME='
+    line: 'HDLHOME="/usr/local/handle"'
 
 - name: configure logging in the start-hdl-server script
   lineinfile:
-      path: {{ handle_config_path }}/start-hdl-server
-      regexp: '^(exec java -server.*) (net.handle.server.Main)'
-      line: '\1 -Dlog4j.configuration=file://{{ handle_config_path }}/log4j-handle-plugin.properties -Ddspace.handle.plugin.configuration=/usr/local/handle/config/handle-dspace-plugin.cfg \2'
-      backrefs: yes
+    dest: /usr/local/handle/config/start-hdl-server
+    regexp: '^(exec java -server.*) (net.handle.server.Main) '
+    line: '\1 -Dlog4j.configuration=file:///usr/local/handle/config/log4j-handle-plugin.properties -Ddspace.handle.plugin.configuration=/usr/local/handle/config/handle-dspace-plugin.cfg \2 "$@"'
+    backrefs: yes
 
 

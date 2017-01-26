@@ -1,5 +1,0 @@
----
-# assembled vars based on defaults
-
-handle_config_path: "{{$handle_path}}/config"
-
