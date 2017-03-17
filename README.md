@@ -1,4 +1,4 @@
-# UCLALib Ansible Role: Handle
+# UCLALib Ansible Role: Handle [![Build Status](https://travis-ci.org/UCLALibrary/uclalib_role_handle.svg?branch=master)](https://travis-ci.org/UCLALibrary/uclalib_role_handle)
 
 Installs a Handle service on RHEL servers
 
@@ -16,4 +16,3 @@ Installs a Handle service on RHEL servers
     roles:
       - { role: uclalib_role_java }
   ```
-
