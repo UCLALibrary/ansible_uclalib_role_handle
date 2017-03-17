@@ -1,0 +1,120 @@
+#!/bin/bash
+######################################################################
+# chkconfig: 2345 95 20                                               #
+# Description: This is an init.d script for the DSpace handle server #
+######################################################################
+
+
+
+# Handle: Start/Stop Handle Instance
+#
+# chkconfig: - 95 20
+# description: This is an init.d script for the DSpace handle server.
+
+### BEGIN INIT INFO
+# Provides: a Handle instance
+# Required-Start: $network $syslog
+# Required-Stop: $network $syslog
+# Default-Start:
+# Default-Stop:
+# Short-Description: Start up the Handle server daemon
+# Description:       Handle.net is a permanent identifier service provided by CNRI
+#                    http://www.cnri.reston.va.us/
+#                    This service depends on a DSpace installation hosted on a Tomcat server daemon,
+#                    and will not start until that service is running on port 8081.
+### END INIT INFO
+
+# set environment
+
+export DSPACE_DIR="{{ dspace_install_dir }}"
+
+export TOMCAT_USER="{{ dspace_service_user }}"
+
+# Need to specify a different java path if we're x86_64
+#if [ `/bin/arch` = "x86_64" ]; then
+#        XARCH=".x86_64"
+#fi
+[ -n "${JAVA_HOME}" ] || export JAVA_HOME=/usr/lib/jvm/java
+[ -n "${JRE_HOME}" ] || export JRE_HOME=/usr/lib/jvm/java
+
+# extra opts for handle...
+export JAVA_OPTS="-Xms64M -Xmx256M"
+export JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses"
+
+PROG=$(basename $0)
+
+# For SELinux we need to use 'runuser' not 'su'
+if [ -x "/sbin/runuser" ]; then
+    SU="/sbin/runuser"
+else
+    SU="su"
+fi
+
+stop() {
+        echo "Stopping {{ handle_instance_name }} handle instance $PROG..."
+         PID=`ps -ef | grep {{ handle_instance_name }} | grep java | awk '!/grep/ {print $2}'`
+        if [[ -n "$PID" ]]; then
+			   # kill handle as humanely as possible
+               for signal in "TERM" "INT" "HUP" "KILL"; do
+					kill -$signal $PID
+					RETVAL=$?
+					[ $RETVAL -eq 0 ] && break
+					sleep 1
+				done 
+        else
+                echo $"${PROG} is not running..."
+        fi
+        echo "Done."
+}
+
+status() {
+        PID=`ps -ef | grep handle | grep java | awk '!/grep/ {print $2}'`
+        if [[ -n "$PID" ]]; then
+                echo $"${PROG} is running (pid $PID)."
+        else
+                echo $"${PROG} is not running..."
+                echo ""
+        fi
+}
+
+
+start() {
+        echo "Starting handle instance $PROG..."
+        echo " ... waiting for Tomcat ... "
+        wait-for-tomcat
+        ${SU} -m ${TOMCAT_USER} -c "nohup {{ handle_instance_path }}/config/start-hdl-server {{ handle_instance_path }}/config > /dev/null &"
+        echo "Done."
+}
+
+restart() {
+        stop
+        start
+}
+
+wait-for-tomcat() {
+    until netstat -lnt | awk '$6 == "LISTEN" && $4 ~ ".8081"'
+        do
+            #wait two seconds
+            sleep 2
+        done
+}
+
+case "$1" in
+        start)
+                start
+                ;;
+        stop)
+                stop
+                ;;
+        restart)
+                restart
+                ;;
+        status)
+                status
+                ;;
+        *)
+                echo $"Usage: $0 {start|stop|restart|status}"
+                exit 1
+esac
+
+exit $?
