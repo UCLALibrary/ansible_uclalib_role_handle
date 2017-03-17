@@ -10,3 +10,11 @@ dspace_localUrl: http://localhost:8081
 # ... this list can accomodate as many endpoints as you need 
 endpoints:
     - "{{ dspace_localUrl }}/{{ dspace_ui }}/json/hdlresolver"
+
+handle_instance_name: handle
+handle_user: root
+handle_group: root
+handle_instance_path: /usr/local/handle
+
+dspace_install_dir: /usr/local/dspace/dspace
+dspace_service_user: dspace
