@@ -37,6 +37,7 @@
     src: "{{ handle_instance_path }}-{{ handle_version }}/hsj-{{ handle_version }}"
     dest: "{{ handle_instance_path }}"
     state: link
+  when: not handle_instance_path_check.stat.exists
 
 - name: Put in place the handle init script
   template: 
