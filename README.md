@@ -4,7 +4,17 @@ Installs a Handle service on RHEL servers. The Handle service utilizes the [DSpa
 
 ## What do you get when this role is done?
 
-This role installs a stock Handle service (version number is specified via a variable, see below). The [DSpace Remote Handle Resolver](https://github.com/DSpace/Remote-Handle-Resolver) plugin is installed and configured. It is left up to you to run the final configuration steps (see the README.txt file in ```/usr/local/handle```) and to forward the sitebndl.zip file produced by the installation script to CNRI.
+This role installs a stock Handle service (version number is specified via a variable, see below). The [DSpace Remote Handle Resolver](https://github.com/DSpace/Remote-Handle-Resolver) plugin is installed and configured. It is left up to you to run the final configuration steps (see the README.txt file in `/usr/local/handle`) and to forward the sitebndl.zip file produced by the installation script to CNRI.
+
+## Conventions
+
+In most of the documentation linked above, the following path is referenced:
+
+`/hs/svr_1`
+
+For the handle server installed by this role, this path is equivalent to:
+
+`/usr/local/handle/config`
 
 ## Variables
 
