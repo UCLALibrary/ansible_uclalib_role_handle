@@ -5,6 +5,7 @@
 handle_version: 8.1.1
 
 dspace_localUrl: http://localhost:8081
+dspace_ui: jspui
 
 # handle endpoints, we expect this to be overwritten by the playbook, this is only here for documentation purposes
 # ... this list can accomodate as many endpoints as you need 
@@ -12,9 +13,9 @@ endpoints:
     - "{{ dspace_localUrl }}/{{ dspace_ui }}/json/hdlresolver"
 
 handle_instance_name: handle
-handle_user: root
-handle_group: root
+handle_user: dspace
+handle_group: dspace
 handle_instance_path: /usr/local/handle
 
 dspace_install_dir: /usr/local/dspace/dspace
-dspace_service_user: dspace
+dspace_service_user: "{{ handle_user }}"
